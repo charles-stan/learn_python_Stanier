@@ -10,6 +10,7 @@ Written/Tested In: Python 3.7.3
 Program Objective: Make a graph of the equation y = f(x) = x**1.5 + ln(x)
 
 Modifications: correcting formatting on print statement Aug 14
+Oct 31, 2019 correcting syntax error in print statement and re-uploading to github
   
 """
 
@@ -31,5 +32,5 @@ pl.plot(x, y, 'o', color='black')
 pl.show()
 
 # Verify one value as an accuracy check
-print 'Checking for x=1.55 ',cf.simple_math_function(1.55) 
+print('Checking for x=1.55 ',cf.simple_math_function(1.55)) 
 print('Checked in excel for x=1.55 and f(x) = 2.368')
