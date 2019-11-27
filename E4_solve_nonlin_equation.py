@@ -40,7 +40,7 @@ pl.plot(x,np.ones(x.size)*ytarget,'r')
 # show the plot on the screen
 pl.show()
 
-res = minimize_scalar( cf.minimize_me_ver2, None, None, ytarget  ) # this will 
+res = minimize_scalar( cf.minimize_me_ver2, args=ytarget  ) # this will 
 # pass the additional argument ytarget to minimize scalar
 print('The equation is solved when x = ',res.x,'\n\n')
 
