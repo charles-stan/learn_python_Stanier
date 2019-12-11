@@ -20,6 +20,15 @@ systems (http://www.aiomfac.caltech.edu/)
 the UManSysProp program is documented at 
 which is documented in Geoscientific Model Development
 https://www.geosci-model-dev.net/9/899/2016/gmd-9-899-2016.html
+
+Modifications
+trying for NaCl in water activity coefficients Dec 11, 2019
+I was able to do the calculation at the UManSysProp website
+http://umansysprop.seaes.manchester.ac.uk/tool/activity_coefficient_inorg_org
+
+Organic API documentation: http://umansysprop.seaes.manchester.ac.uk/api/activity_coefficient_org
+Inorganic API documentation: http://umansysprop.seaes.manchester.ac.uk/api/activity_coefficient_inorg_org
+
 """
 
 import umansysprop.client
@@ -107,8 +116,38 @@ pl.xlabel('x1')
 pl.ylabel('Pressure')
 pl.title('Pxy of Ethanol (1) Toluene (2) System at 65C')
 pl.show(fig2)
-        
 
+## now for water and NaCl - switching from activity_coefficient_org
+## to activity_coefficient_inorg_org
 
+c1 = '[Na+]'
+c2 = '[Cl-]'
+c3 = 'O' # water in SMILES
 
+# NOTE - got an error when tried to call with pure water
+T_K = 273.15+65
+
+xs_arr = np.linspace(0.01,0.5,10)
+H2O_act_arr = np.empty_like(xs_arr)
+NA_act_arr = np.empty_like(xs_arr)
+CL_act_arr = np.empty_like(xs_arr)
+cc=0
+for xs in xs_arr:
+        xna = xs/(2*xs+(1-xs))
+        xcl = xna
+        xh2o = 1 - xna - xcl
+        result = client.activity_coefficient_inorg_org(organic_compounds={c3: xh2o}, \
+           inorganic_ions={c1:xna, c2:xcl},interactions_method='AIOMFAC', temperatures=T_K)
+        H2O_act_arr[cc]=result.coefficients.data[(T_K,'O')]
+        # note this call to client.activity_coefficient_inorg_org
+        # worked one time and then started returning error code 500
+        # server error.   see response.status_code and response.text within client
+
+fig3=pl.figure()
+pl.plot(xs_arr,H2O_act_arr,color='black')
+#pl.plot(y1_array,Ptot_array,color='red')
+pl.xlabel('NaCl mole fraction')
+pl.ylabel('Activity Coef')
+pl.title('Na and Cl Activity Coef')
+pl.show(fig3)
 
